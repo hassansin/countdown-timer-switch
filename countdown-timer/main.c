@@ -56,20 +56,41 @@ void toggle_buzzer() {
 	}
 }
 
+#define OFF 1
+volatile int8_t a0  = OFF;
+volatile int8_t c0 = OFF; 
 
-//Rotary Encoder Clock	
-ISR(INT0_vect) {
+void rot_enc_change(int8_t val) {
 	wait_counter = WAIT_TIME;
 	finished = 0;
 	seconds = 0;
 	disable_buzzer();
-	
-	if(bit_is_set(ROT_ENC_REG, ROT_ENC_DATA)) {
-		delay--;
-	} else{
-		delay++;
+	delay = rotary_constrain(delay + val, MIN_DELAY, MAX_DELAY);
+}
+//returns 0 or 1 or -1
+int8_t rot_enc_detect_change() {
+	int8_t a = (PIND >> PD2) & 1;
+	int8_t b = (PIND >> PD1) & 1;	
+	if (a != a0) {
+		a0 = a;
+		if (b != c0) {
+			if(c0 == OFF) {
+				c0 = b;
+				return 0;
+			}
+			c0 = b;
+			if(a==b) {
+				return 1;					
+			}				
+			return -1;
+		}
 	}
-	delay = rotary_constrain(delay, MIN_DELAY, MAX_DELAY);
+	return 0;
+}
+//Rotary Encoder Clock	
+ISR(INT0_vect) {
+	int8_t delta= rot_enc_detect_change();
+	rot_enc_change(delta);
 }
 
 void enable_first_segment(){
@@ -236,8 +257,8 @@ int main(void)
 	relay_init();
 	
 	//Rotary Encoder Clock PIN - INT0
-	//Set INT0 Sense Control - falling edge
-	set_bit(MCUCR, ISC01);
+	//Set INT0 Sense Control - any change
+	set_bit(MCUCR, ISC00);
 	set_bit(GICR, INT0);
 	
 	//Configure Timer2: 1000Hz/1ms
