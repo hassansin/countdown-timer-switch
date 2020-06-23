@@ -21,7 +21,6 @@
 #define EEPROM_ADDR ( uint8_t *) 0
 #define DP 1<<7
 #define WAIT_TIME 4 //seconds, time to wait after the changing counter 
-#define ROT_ENC_DELAY_TH 1 //milliseconds to wait before registering a rotary encoder rotation
 
 #define is_waiting() (wait_counter != 0)
 #define is_off() (delay == 0 || is_waiting())
@@ -58,39 +57,19 @@ void toggle_buzzer() {
 }
 
 
-volatile uint8_t rot_enc_interrupt;
-volatile int8_t rot_enc_interrupt_delay = ROT_ENC_DELAY_TH;
-
-void check_rotary_encoder() {
-	if(rot_enc_interrupt == 0) {
-		return;
-	}	
-	rot_enc_interrupt_delay--;
-	if(rot_enc_interrupt_delay >= 0) {
-		return;
-	}
-	
+//Rotary Encoder Clock	
+ISR(INT0_vect) {
 	wait_counter = WAIT_TIME;
 	finished = 0;
 	seconds = 0;
-	rot_enc_interrupt = 0;
-	rot_enc_interrupt_delay = 0;
-	
 	disable_buzzer();
 	
 	if(bit_is_set(ROT_ENC_REG, ROT_ENC_DATA)) {
 		delay--;
-		} else{
+	} else{
 		delay++;
 	}
-	delay = rotary_constrain(delay, MIN_DELAY, MAX_DELAY);	
-}
-
-//Rotary Encoder Clock	
-ISR(INT0_vect) {
-	rot_enc_interrupt = 1;
-	rot_enc_interrupt_delay = ROT_ENC_DELAY_TH;
-	//check_rotary_encoder();
+	delay = rotary_constrain(delay, MIN_DELAY, MAX_DELAY);
 }
 
 void enable_first_segment(){
@@ -220,7 +199,6 @@ ISR(TIMER2_COMP_vect) {
 	if(ms == 1000) {
 		ms = 0;
 	}
-	check_rotary_encoder();
 	if(ms % 10 == 0) {
 		at_each_centi_second(ms/10);
 	}
