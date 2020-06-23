@@ -21,6 +21,7 @@
 #define EEPROM_ADDR ( uint8_t *) 0
 #define DP 1<<7
 #define WAIT_TIME 4 //seconds, time to wait after the changing counter 
+#define ROT_ENC_DELAY_TH 1 //milliseconds to wait before registering a rotary encoder rotation
 
 #define is_waiting() (wait_counter != 0)
 #define is_off() (delay == 0 || is_waiting())
@@ -57,18 +58,39 @@ void toggle_buzzer() {
 }
 
 
-//Rotary Encoder Clock	
-ISR(INT0_vect) {
+volatile uint8_t rot_enc_interrupt;
+volatile int8_t rot_enc_interrupt_delay = ROT_ENC_DELAY_TH;
+
+void check_rotary_encoder() {
+	if(rot_enc_interrupt == 0) {
+		return;
+	}	
+	rot_enc_interrupt_delay--;
+	if(rot_enc_interrupt_delay >= 0) {
+		return;
+	}
+	
 	wait_counter = WAIT_TIME;
 	finished = 0;
 	seconds = 0;
+	rot_enc_interrupt = 0;
+	rot_enc_interrupt_delay = 0;
+	
 	disable_buzzer();
+	
 	if(bit_is_set(ROT_ENC_REG, ROT_ENC_DATA)) {
 		delay--;
-	} else{
+		} else{
 		delay++;
 	}
-	delay = constrain(delay, MIN_DELAY, MAX_DELAY);
+	delay = rotary_constrain(delay, MIN_DELAY, MAX_DELAY);	
+}
+
+//Rotary Encoder Clock	
+ISR(INT0_vect) {
+	rot_enc_interrupt = 1;
+	rot_enc_interrupt_delay = ROT_ENC_DELAY_TH;
+	//check_rotary_encoder();
 }
 
 void enable_first_segment(){
@@ -149,7 +171,7 @@ void delay_countdown(uint16_t  sec) {
 	seconds++;
 	if(seconds == SECONDS_PER_MIN) {
 		seconds = 0;		
-		delay = constrain(delay-1, MIN_DELAY, MAX_DELAY);
+		delay = rotary_constrain(delay-1, MIN_DELAY, MAX_DELAY);
 	}
 	if(delay == 0) {
 		finished = 1;
@@ -198,6 +220,7 @@ ISR(TIMER2_COMP_vect) {
 	if(ms == 1000) {
 		ms = 0;
 	}
+	check_rotary_encoder();
 	if(ms % 10 == 0) {
 		at_each_centi_second(ms/10);
 	}
@@ -212,16 +235,11 @@ void relay_init(){
 	turnoff();
 }
 
-void buzzer_init() {
-	
-}
-
 int main(void)
 {
 	cli();	
 	//Read from EEROM, First read might return garbage value
-	//delay = constrain(eeprom_read_byte(EEPROM_ADDR), MIN_DELAY, MAX_DELAY);
-	delay = 8;
+	delay = rotary_constrain(eeprom_read_byte(EEPROM_ADDR), MIN_DELAY, MAX_DELAY);
 	wait_counter = 2*WAIT_TIME;
 	
 	//Display PORT
@@ -234,6 +252,8 @@ int main(void)
 	
 	//Rotary Encoder Data PIN
 	clear_bit(DDRD, PD1);
+	DDRD &= ~(1<<PD1 | 1<<PD0);
+	PORTB |= 1<< PD0 | 1 << PD1; //pull-up
 	
 	relay_init();
 	

@@ -17,6 +17,7 @@
 
 #define set_bit(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #define clear_bit(sfr, bit)   (_SFR_BYTE(sfr) &= ~_BV(bit))
-#define constrain(v,min,max) ((v)<(min)?(max):(v)>(max)?(min):(v))
+#define rotary_constrain(v,min,max) ((v)<(min)?(max):(v)>(max)?(min):(v))
+#define constrain(v,min,max) ((v)<(min)?(min):(v)>(max)?(max):(v))
 
 #endif /* UTIL_H_ */
