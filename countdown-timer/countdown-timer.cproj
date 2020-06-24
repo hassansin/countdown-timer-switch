@@ -148,13 +148,28 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Buzzer.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Buzzer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="GlobalDefinitions.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Main.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="pinDefines.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="util.h">
+    <Compile Include="Rotary.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Rotary.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

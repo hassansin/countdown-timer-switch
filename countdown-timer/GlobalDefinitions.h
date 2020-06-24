@@ -1,17 +1,13 @@
 /*
- * util.h
+ * GlobalDefinitions.h
  *
- * Created: 6/21/2020 4:16:36 PM
+ * Created: 6/24/2020 12:18:58 PM
  *  Author: Hassansin
  */ 
 
 
-#ifndef UTIL_H_
-#define UTIL_H_
-
-#ifndef F_CPU
-#define F_CPU 1000000UL
-#endif
+#ifndef GLOBALDEFINITIONS_H_
+#define GLOBALDEFINITIONS_H_
 
 #include <avr/sfr_defs.h>
 
@@ -20,4 +16,4 @@
 #define rotary_constrain(v,min,max) ((v)<(min)?(max):(v)>(max)?(min):(v))
 #define constrain(v,min,max) ((v)<(min)?(min):(v)>(max)?(max):(v))
 
-#endif /* UTIL_H_ */
+#endif /* GLOBALDEFINITIONS_H_ */
