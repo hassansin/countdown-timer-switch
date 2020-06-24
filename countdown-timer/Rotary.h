@@ -1,14 +1,14 @@
 /*
-* Rotary.h
-*
-* Created: 6/24/2020 11:39:46 AM
-* Author: Hassansin
-*/
-
+ * Rotary.h
+ *
+ * Created: 6/24/2020 11:39:46 AM
+ * Author: Hassansin
+ */
 
 #ifndef ROTARY_H_
 #define ROTARY_H_
 
+#include <avr/interrupt.h>
 #include <avr/io.h>
 
 #define ROTARY_DDR DDRD
@@ -19,11 +19,9 @@
 #define ROTARY_SW PD3
 #define OFF 1
 
-
 volatile int8_t a0;
 volatile int8_t c0;
 
-int8_t rotary_detect_change(void);
-void rotary_init(void);
+void rotary_init(void (*cb)(int8_t));
 
 #endif /* ROTARY_H_ */

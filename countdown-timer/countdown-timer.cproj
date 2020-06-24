@@ -154,6 +154,12 @@
     <Compile Include="Buzzer.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Display.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Display.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="GlobalDefinitions.h">
       <SubType>compile</SubType>
     </Compile>
@@ -163,7 +169,10 @@
     <Compile Include="Main.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="pinDefines.h">
+    <Compile Include="Relay.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Relay.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Rotary.c">
