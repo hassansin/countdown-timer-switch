@@ -12,7 +12,6 @@
 
 #include "Buzzer.h"
 #include "Display.h"
-#include "GlobalDefinitions.h"
 #include "Relay.h"
 #include "Rotary.h"
 #include <avr/eeprom.h>
@@ -31,5 +30,9 @@
 
 #define is_waiting() (wait_counter != 0)
 #define is_off() (delay == 0 || is_waiting())
+
+#define rotary_constrain(v, min, max)                                          \
+  ((v) < (min) ? (max) : (v) > (max) ? (min) : (v))
+#define constrain(v, min, max) ((v) < (min) ? (min) : (v) > (max) ? (max) : (v))
 
 #endif /* MAIN_H_ */

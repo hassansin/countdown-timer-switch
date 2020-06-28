@@ -7,12 +7,12 @@
 
 #include "Main.h"
 
-volatile bool finished;
 volatile uint16_t ms;
 volatile uint8_t wait_counter;
 volatile int8_t delay;    // total timer delay in minute
 volatile uint8_t seconds; // counts seconds, reset every minute
 volatile bool save_delay;
+volatile bool finished;
 
 void rot_enc_change(int8_t val) {
   wait_counter = WAIT_TIME;
@@ -42,7 +42,7 @@ void update_display(uint16_t cs) {
   }
 }
 
-void flush_display(uint16_t cs) {
+void flash_display(uint16_t cs) {
   display_set_data(0, false);
   if (cs % 25 == 0) {
     display_toggle_both_segments();
@@ -81,7 +81,7 @@ void wait_countdown(uint16_t sec) {
 
 void at_each_centi_second(uint8_t cs) {
   if (finished) {
-    flush_display(cs);
+    flash_display(cs);
     tone(cs);
   } else {
     update_display(cs);
@@ -119,10 +119,10 @@ int main(void) {
   buzzer_init();
 
   // Configure Timer2: 1000Hz/1ms
-  set_bit(TCCR2, CS21);
-  set_bit(TCCR2, WGM21); // Mode 2: CTC
+  TCCR2 |= 1<< CS21;
+  TCCR2 |= 1<< WGM21; // Mode 2: CTC
   OCR2 = 124;
-  set_bit(TIMSK, OCIE2); // Set interrupt on compare match
+  TIMSK |= 1<<OCIE2; // Set interrupt on compare match
 
   sei();
 

@@ -11,6 +11,10 @@
 #include <avr/io.h>
 #include <stdbool.h>
 
+#define DISPLAY_FIRST_DIGIT PC0
+#define DISPLAY_SECOND_DIGIT PC1
+#define DISPLAY_CTRL_PORT PORTC
+#define DISPLAY_CTRL_DDR DDRC
 #define DP 1 << 7
 
 void display_init();

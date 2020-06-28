@@ -18,26 +18,26 @@ void display_init() {
   DDRD |= 0b11100000;
 
   // Display Control
-  DDRC |= 1 << PC0 | 1 << PC1;
-  PORTC |= 1 << PC1; // turn off second display
+  DISPLAY_CTRL_DDR |= 1 << DISPLAY_FIRST_DIGIT | 1 << DISPLAY_SECOND_DIGIT;
+  DISPLAY_CTRL_PORT |= 1 << DISPLAY_SECOND_DIGIT; // turn off second display
 }
 
 void display_enable_first_segment() {
-  PORTC |= 1 << PC1;
-  PORTC &= ~(1 << PC0);
+  DISPLAY_CTRL_PORT |= 1 << PC1;
+  DISPLAY_CTRL_PORT &= ~(1 << PC0);
 }
 
 void display_enable_second_segment() {
-  PORTC |= 1 << PC0;
-  PORTC &= ~(1 << PC1);
+  DISPLAY_CTRL_PORT |= 1 << PC0;
+  DISPLAY_CTRL_PORT &= ~(1 << PC1);
 }
 
-void display_enable_both_segments() { PORTC &= ~(1 << PC0 | 1 << PC1); }
+void display_enable_both_segments() { DISPLAY_CTRL_PORT &= ~(1 << DISPLAY_FIRST_DIGIT | 1 << DISPLAY_SECOND_DIGIT); }
 
-void display_disable_both_segments() { PORTC |= 1 << PC0 | 1 << PC1; }
+void display_disable_both_segments() { DISPLAY_CTRL_PORT |= 1 << DISPLAY_FIRST_DIGIT | 1 << DISPLAY_SECOND_DIGIT; }
 
 void display_toggle_both_segments() {
-  if (bit_is_set(PORTC, PC0) || bit_is_set(PORTC, PC1)) {
+  if (bit_is_set(DISPLAY_CTRL_PORT, DISPLAY_FIRST_DIGIT) || bit_is_set(DISPLAY_CTRL_PORT, DISPLAY_SECOND_DIGIT)) {
     display_enable_both_segments();
   } else {
     display_disable_both_segments();
