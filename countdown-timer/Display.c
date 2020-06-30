@@ -14,8 +14,8 @@ uint8_t digits[] = {0x3F, 0x06, 0x5B, 0x4F, 0x66,
 
 void display_init() {
   // Display PORT
-  DDRB |= 0b11111000;
-  DDRD |= 0b11100000;
+  DDRC |= 0b00111111;
+  DDRB |= 0b00110000;
 
   // Display Control
   DISPLAY_CTRL_DDR |= 1 << DISPLAY_FIRST_DIGIT | 1 << DISPLAY_SECOND_DIGIT;
@@ -23,13 +23,13 @@ void display_init() {
 }
 
 void display_enable_first_segment() {
-  DISPLAY_CTRL_PORT |= 1 << PC1;
-  DISPLAY_CTRL_PORT &= ~(1 << PC0);
+  DISPLAY_CTRL_PORT |= 1 << DISPLAY_SECOND_DIGIT;
+  DISPLAY_CTRL_PORT &= ~(1 << DISPLAY_FIRST_DIGIT);
 }
 
 void display_enable_second_segment() {
-  DISPLAY_CTRL_PORT |= 1 << PC0;
-  DISPLAY_CTRL_PORT &= ~(1 << PC1);
+  DISPLAY_CTRL_PORT |= 1 << DISPLAY_FIRST_DIGIT;
+  DISPLAY_CTRL_PORT &= ~(1 << DISPLAY_SECOND_DIGIT);
 }
 
 void display_enable_both_segments() { DISPLAY_CTRL_PORT &= ~(1 << DISPLAY_FIRST_DIGIT | 1 << DISPLAY_SECOND_DIGIT); }
@@ -49,13 +49,13 @@ void display_set_data(uint8_t num, bool dp) {
   if (dp) {
     data |= DP;
   }
-  uint8_t temp = PORTB;
-  temp &= ~0b11111000;
-  temp |= (data & 0b11111000);
-  PORTB = temp;
+  uint8_t temp = PORTC;
+  temp &= ~0b00111111;
+  temp |= (data & 0b00111111);
+  PORTC = temp;
 
-  temp = PORTD;
-  temp &= ~0b11100000;
-  temp |= (data & 0b00000111) << 5;
-  PORTD = temp;
+  temp = PORTB;
+  temp &= ~0b00110000;
+  temp |= (data & 0b11000000) >> 2;
+  PORTB = temp;
 }

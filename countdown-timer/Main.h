@@ -27,6 +27,8 @@
 #define SECONDS_PER_MIN 10 // seconds
 #define EEPROM_ADDR (uint8_t *)0
 #define WAIT_TIME 4 // seconds, time to wait after the changing counter
+#define BEEP_DURATION 3 //seconds
+#define BEEP_FREQ 1000
 
 #define is_waiting() (wait_counter != 0)
 #define is_off() (delay == 0 || is_waiting())
