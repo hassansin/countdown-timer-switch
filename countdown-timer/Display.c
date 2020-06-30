@@ -32,12 +32,17 @@ void display_enable_second_segment() {
   DISPLAY_CTRL_PORT &= ~(1 << DISPLAY_SECOND_DIGIT);
 }
 
-void display_enable_both_segments() { DISPLAY_CTRL_PORT &= ~(1 << DISPLAY_FIRST_DIGIT | 1 << DISPLAY_SECOND_DIGIT); }
+void display_enable_both_segments() {
+  DISPLAY_CTRL_PORT &= ~(1 << DISPLAY_FIRST_DIGIT | 1 << DISPLAY_SECOND_DIGIT);
+}
 
-void display_disable_both_segments() { DISPLAY_CTRL_PORT |= 1 << DISPLAY_FIRST_DIGIT | 1 << DISPLAY_SECOND_DIGIT; }
+void display_disable_both_segments() {
+  DISPLAY_CTRL_PORT |= 1 << DISPLAY_FIRST_DIGIT | 1 << DISPLAY_SECOND_DIGIT;
+}
 
 void display_toggle_both_segments() {
-  if (bit_is_set(DISPLAY_CTRL_PORT, DISPLAY_FIRST_DIGIT) || bit_is_set(DISPLAY_CTRL_PORT, DISPLAY_SECOND_DIGIT)) {
+  if (bit_is_set(DISPLAY_CTRL_PORT, DISPLAY_FIRST_DIGIT) ||
+      bit_is_set(DISPLAY_CTRL_PORT, DISPLAY_SECOND_DIGIT)) {
     display_enable_both_segments();
   } else {
     display_disable_both_segments();

@@ -12,8 +12,8 @@
 
 #define __DELAY_BACKWARD_COMPATIBLE__
 #include <avr/io.h>
-#include <util/delay.h>
 #include <stdbool.h>
+#include <util/delay.h>
 
 #define BUZZER_DDR DDRB
 #define BUZZER_PORT PORTB

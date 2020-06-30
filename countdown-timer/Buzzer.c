@@ -14,17 +14,17 @@ void buzzer_init() {
 }
 void buzzer_beep(uint16_t freq, float duration) {
   float elaspsed = 0;
-  while(elaspsed < duration) {
+  while (elaspsed < duration) {
     buzzer_play(freq, 250); // play for 250ms
-    _delay_ms(250); // stop for 250ms
+    _delay_ms(250);         // stop for 250ms
     elaspsed += 0.50;
   }
 }
-void buzzer_play( uint16_t freq, uint16_t duration) {
-  float period = 1000/(float)freq; //in millisecond
-  int16_t cycles = duration/period;
+void buzzer_play(uint16_t freq, uint16_t duration) {
+  float period = 1000 / (float)freq; // in millisecond
+  int16_t cycles = duration / period;
 
-  for (;cycles>=0;cycles--) {
+  for (; cycles >= 0; cycles--) {
     BUZZER_PORT &= ~(1 << BUZZER); // on
     //_delay_us((int)(1000*period)/2);
     _delay_ms(1);
@@ -34,7 +34,7 @@ void buzzer_play( uint16_t freq, uint16_t duration) {
   }
 }
 
-//tone frequency and duration (in seconds) of tone]
+// tone frequency and duration (in seconds) of tone]
 /*
 void buzzer_enable(uint16_t freq, float duration) {
   float period = 1000/freq; //in millisecond
