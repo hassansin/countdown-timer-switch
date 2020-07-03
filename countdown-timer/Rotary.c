@@ -25,7 +25,7 @@ void rotary_init(void (*cb)(int8_t)) {
                   1 << ROTARY_CLK); // Set direction of clock pin and data pin
 
   // TODO: comment out following when simulating in Proteus
-  //ROTARY_PORT |= 1<< ROTARY_DATA | 1 << ROTARY_CLK; //enable pull-ups
+  // ROTARY_PORT |= 1<< ROTARY_DATA | 1 << ROTARY_CLK; //enable pull-ups
 
   MCUCR |= 1 << ISC00; // Any logical change on INT0
   GICR |= 1 << INT0;   // enable external interrupt

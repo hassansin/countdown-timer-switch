@@ -13,11 +13,11 @@ volatile int8_t delay;    // total timer delay in minute
 volatile uint8_t seconds; // counts seconds, reset every minute
 volatile bool save_delay;
 volatile bool finished;
-volatile uint8_t beep_elapsed; //beep_duration in seconds
+volatile uint8_t beep_elapsed; // beep_duration in seconds
 
 void rot_enc_change(int8_t val) {
   wait_counter = WAIT_TIME;
-  finished = false;  
+  finished = false;
   seconds = 0;
   buzzer_pwm_disable();
   delay = rotary_constrain(delay + val, MIN_DELAY, MAX_DELAY);
@@ -38,8 +38,8 @@ void update_display(uint16_t cs) {
     display_enable_first_segment();
     display_set_data(d1, false);
   } else if (d2 != 0) { // disable second segment if value is zero
+    display_set_data(d2, false); // must set data first to avoid blinking effect
     display_enable_second_segment();
-    display_set_data(d2, false);
   }
 }
 
@@ -51,13 +51,13 @@ void flash_display(uint16_t cs) {
 }
 
 void tone(uint8_t cs) {
-  if(beep_elapsed >= BEEP_DURATION) {
+  if (beep_elapsed >= BEEP_DURATION) {
     buzzer_pwm_disable();
     return;
   }
-  if(cs == 0 ) {
+  if (cs == 0) {
     beep_elapsed++;
-  }  
+  }
   if (cs % 25 == 0) {
     buzzer_pwm_toggle();
   }
@@ -105,7 +105,7 @@ void at_each_second(uint8_t sec) {
 // Invoked at 1ms interval
 ISR(TIMER2_COMP_vect) {
   ms++;
-  if (ms == 1000) {
+  if (ms == CALIBRATED_MS_PER_SECOND) {
     ms = 0;
   }
   if (ms % 10 == 0) {
@@ -120,7 +120,7 @@ int main(void) {
   cli();
   // Read from EEROM, First read might return garbage value
   delay = rotary_constrain(eeprom_read_byte(EEPROM_ADDR), MIN_DELAY, MAX_DELAY);
-  //delay = 1;
+  // delay = 1;
   wait_counter = 2 * WAIT_TIME;
 
   display_init();
@@ -129,10 +129,10 @@ int main(void) {
   buzzer_pwm_init();
 
   // Configure Timer2: 1000Hz/1ms
-  TCCR2 |= 1<< CS21;
-  TCCR2 |= 1<< WGM21; // Mode 2: CTC
+  TCCR2 |= 1 << CS21;
+  TCCR2 |= 1 << WGM21; // Mode 2: CTC
   OCR2 = 124;
-  TIMSK |= 1<<OCIE2; // Set interrupt on compare match
+  TIMSK |= 1 << OCIE2; // Set interrupt on compare match
 
   sei();
 
@@ -145,6 +145,6 @@ int main(void) {
       relay_off();
     } else {
       relay_on();
-    }    
+    }
   }
 }

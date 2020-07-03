@@ -11,11 +11,11 @@
 #include <avr/io.h>
 #include <stdbool.h>
 
-#define DISPLAY_FIRST_DIGIT PB2
-#define DISPLAY_SECOND_DIGIT PB3
+#define DISPLAY_FIRST_DIGIT PB3
+#define DISPLAY_SECOND_DIGIT PB2
 #define DISPLAY_CTRL_PORT PORTB
 #define DISPLAY_CTRL_DDR DDRB
-#define DP 1 << 7
+#define DP 1 << 6
 
 void display_init();
 void display_enable_first_segment();
