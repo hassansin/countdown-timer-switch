@@ -31,14 +31,17 @@ void update_display(uint16_t cs) {
   // Toggle segments at every 10ms
   // Show the dot point only at the beginning of a second AND when countdown
   // timer is on
+
+  //// must set data first to avoid blinking effect
+  //in Proteus, however the order of these two lines need to be reversed to properly render the display.
   if (cs == 0 && !is_off()) {
-    display_enable_first_segment();
     display_set_data(d1, true);
+    display_enable_first_segment();    
   } else if (cs % 2 == 0) {
-    display_enable_first_segment();
     display_set_data(d1, false);
+    display_enable_first_segment();    
   } else if (d2 != 0) { // disable second segment if value is zero
-    display_set_data(d2, false); // must set data first to avoid blinking effect
+    display_set_data(d2, false); 
     display_enable_second_segment();
   }
 }

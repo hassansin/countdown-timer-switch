@@ -29,7 +29,7 @@
 #define WAIT_TIME 4     // seconds, time to wait after the changing counter
 #define BEEP_DURATION 3 // seconds
 #define BEEP_FREQ 1000
-#define CALIBRATED_MS_PER_SECOND 986
+#define CALIBRATED_MS_PER_SECOND 980
 
 #define is_waiting() (wait_counter != 0)
 #define is_off() (delay == 0 || is_waiting())
